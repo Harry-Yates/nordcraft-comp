@@ -1,9 +1,16 @@
 {
+  "name": "nordcraft-comp",
+  "version": "0.1.0",
   "private": true,
+  "description": "A modern task management application with a Nordic design aesthetic",
+  "author": "Harry Yates",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.1",

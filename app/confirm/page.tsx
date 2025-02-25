@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/utils/supabase';
 
-export default function ConfirmPage() {
+// Create a client component that uses useSearchParams
+function ConfirmContent() {
     const [message, setMessage] = useState('Verifying your email...');
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -86,16 +87,30 @@ export default function ConfirmPage() {
     }, [router, searchParams]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4">
-            <div className="max-w-md w-full space-y-8 text-center">
-                <h1 className="text-2xl font-bold">Email Confirmation</h1>
+        <div className="max-w-md w-full space-y-8 text-center">
+            <h1 className="text-2xl font-bold">Email Confirmation</h1>
 
-                {error ? (
-                    <p className="text-red-500">{error}</p>
-                ) : (
-                    <p className="text-green-500">{message}</p>
-                )}
-            </div>
+            {error ? (
+                <p className="text-red-500">{error}</p>
+            ) : (
+                <p className="text-green-500">{message}</p>
+            )}
+        </div>
+    );
+}
+
+// Main page component with Suspense boundary
+export default function ConfirmPage() {
+    return (
+        <div className="min-h-screen flex flex-col items-center justify-center p-4">
+            <Suspense fallback={
+                <div className="max-w-md w-full space-y-8 text-center">
+                    <h1 className="text-2xl font-bold">Email Confirmation</h1>
+                    <p>Loading...</p>
+                </div>
+            }>
+                <ConfirmContent />
+            </Suspense>
         </div>
     );
 } 

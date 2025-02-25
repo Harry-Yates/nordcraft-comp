@@ -42,6 +42,9 @@ export default function HomePage() {
           });
 
           if (authError) {
+            if (authError.message.includes('rate limit exceeded')) {
+              throw new Error('You\'ve requested too many login emails. Please wait 1 hour before trying again, or check your email for an existing magic link.');
+            }
             throw new Error(`Error sending magic link: ${authError.message}`);
           }
 
@@ -76,6 +79,9 @@ export default function HomePage() {
       });
 
       if (authError) {
+        if (authError.message.includes('rate limit exceeded')) {
+          throw new Error('You\'ve requested too many login emails. Please wait 1 hour before trying again, or check your email for an existing magic link.');
+        }
         throw new Error(`Error sending magic link: ${authError.message}`);
       }
 
@@ -84,7 +90,14 @@ export default function HomePage() {
       setEmail('');
     } catch (error) {
       console.error('Signup error:', error);
-      setMessage(error instanceof Error ? error.message : 'An error occurred');
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setMessage(errorMessage);
+
+      // Clear the form only if it's not a rate limit error
+      if (!errorMessage.includes('rate limit exceeded')) {
+        setName('');
+        setEmail('');
+      }
     } finally {
       setIsLoading(false);
     }

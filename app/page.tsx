@@ -58,6 +58,9 @@ export default function HomePage() {
         .insert([{ name, email, confirmed: false }]);
 
       if (attendeeError) {
+        if (attendeeError.message.includes('duplicate key value violates unique constraint')) {
+          throw new Error('This email address has already been registered. Please use a different email address or check your inbox for the confirmation email.');
+        }
         throw new Error(`Error registering: ${attendeeError.message}`);
       }
 
